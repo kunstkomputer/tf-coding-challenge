@@ -43,7 +43,9 @@ module "tf-coding-challenge" {
 ```
 You may specify the git ref of this module by changing the `ref` querystring parameter of the github URL to a desired value (e.g. `main`,`develop`).
 
-In case you omit the parameter terraform will soure the default branch (`main` in this case).
+In case you omit the parameter terraform will source the default branch (`main` in this case).
+
+> **_NOTE:_**  Caution, you may run `terraform init` prior to any other command, to fetch the module under the git ref. If the ref in the repo is changing, a re-init of your local tf workdir is required, to pull the changes.
 
 ## Prerequesites
 
