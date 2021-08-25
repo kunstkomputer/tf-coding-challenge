@@ -49,11 +49,11 @@ resource "aws_iam_role_policy" "lambda_execution_role" {
 
 # function
 resource "aws_lambda_function" "kunstkomputer_lambda" {
-  filename      = "${path.module}/deployment_package.zip"
-  function_name = "python_hello_world"
-  role          = aws_iam_role.lambda_execution[count.index].arn
-  handler       = "function_code.main.lambda_handler"
-  layers        = []
+  filename         = "${path.module}/deployment_package.zip"
+  function_name    = "python_hello_world"
+  role             = aws_iam_role.lambda_execution[count.index].arn
+  handler          = "function_code.main.lambda_handler"
+  layers           = []
   source_code_hash = filebase64sha256("${path.module}/deployment_package.zip")
 
   runtime = "python3.9"
