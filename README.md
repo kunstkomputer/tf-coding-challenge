@@ -2,6 +2,13 @@
 
 Sample terraform config providing a lambda function, which is triggered via a cron expression.
 
+### Usage
+
+The configuration files can be sourced without creating resources by setting the `create_resources` var to `False`
+This can be done on module level via a .tfvars or on cli level e.g.:
+```
+❯ terraform apply -var create_resources=fals
+```
 
 ## Prerequesites
 
@@ -21,6 +28,7 @@ Sample terraform config providing a lambda function, which is triggered via a cr
   - `lambda:CreateAlias`
   - `lambda:GetFunctionConfiguration`
   - `lambda:AddPermissio`
+  - `events:PutRule`
 
 
 ## Caveates
