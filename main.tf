@@ -1,7 +1,8 @@
 
 variable "create_resources" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
+  description = "if true, this config will create the desired resources in this file. Set to false for dry-sourcing the module"
 }
 
 # roles
