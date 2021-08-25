@@ -95,3 +95,7 @@ resource "aws_lambda_permission" "trigger_execution_permission" {
   source_arn    = aws_cloudwatch_event_rule.cron_trigger[count.index].arn
   count = var.create_resources ? 1 : 0
 }
+
+output "deployed_region" {
+  value = data.aws_region.current.name
+}
