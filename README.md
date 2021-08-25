@@ -47,6 +47,24 @@ In case you omit the parameter terraform will source the default branch (`main` 
 
 > **_NOTE:_**  Caution, you may run `terraform init` prior to any other command, to fetch the module under the git ref. If the ref in the repo is changing, a re-init of your local tf workdir is required, to pull the changes.
 
+### read the region from the config
+If the config is sourced via a root module as described above under _How to use this config_. One may retrieve the region it was applied to via:
+```
+rootmodule/main.tf
+...
+module "tf-coding-challenge" {
+  source = "git@github.com:kunstkomputer/tf-coding-challenge.git?ref=after_submission"
+}
+output "region_from_module" {
+  value = "${module.tf-coding-challenge.deployed_region}"
+}
+...
+```
+fetch the output from cli
+
+```
+❯ tf refresh && tf output region_from_module
+```
 ## Prerequesites
 
 - Setup your aws CLI and username either as environment vars or via `~/.aws/credentials`
