@@ -13,6 +13,7 @@ provider "aws" {
   region  = "eu-central-1"
 }
 
+# roles
 resource "aws_iam_role" "lambda_execution" {
   name = "iam_for_kunstkomputer_lambda"
 
@@ -51,7 +52,7 @@ resource "aws_iam_role_policy" "lambda_execution_role" {
   policy = data.aws_iam_policy_document.lambda_execution_role_policy.json
 }
 
-
+# function
 resource "aws_lambda_function" "kunstkomputer_lambda" {
   filename      = "deployment_package.zip"
   function_name = "python_hello_world"
@@ -64,6 +65,25 @@ resource "aws_lambda_function" "kunstkomputer_lambda" {
 
   }
 
+# cron trigger
+resource "aws_cloudwatch_event_rule" "cron_trigger" {
+  name                = "cron_trigger_for_kunstkomputer_lambda"
+  description         = "Fires every minute"
+  schedule_expression = "cron(* * * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "trigger_kunstkomputer_lambda" {
+  rule      = aws_cloudwatch_event_rule.cron_trigger.name
+  arn       = aws_lambda_function.kunstkomputer_lambda.arn
+}
+
+resource "aws_lambda_permission" "trigger_execution_permission" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.kunstkomputer_lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.cron_trigger.arn
+}
 
 output "function_name" {
   value = aws_lambda_function.kunstkomputer_lambda.function_name
