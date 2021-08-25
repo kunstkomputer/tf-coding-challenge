@@ -17,6 +17,34 @@ The lambda source code is deployed via a zip file of the code. To package the co
 The zipfile creation and uploading of code to an S3 Bucket is something that may be automated using a CI pipeline
 like github actions. For brevity of this challenge, a zipfile is included in the repo.
 
+#### How to use this config
+
+This config is intended to be sourced from a root module.
+Sample Code:
+```
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.55.0"
+    }
+  }
+
+  required_version = ">= 0.14.9"
+}
+
+provider "aws" {
+  region = "eu-central-1"
+}
+
+module "tf-coding-challenge" {
+  source = "git@github.com:kunstkomputer/tf-coding-challenge.git?ref=after_submission"
+}
+```
+You may specify the git ref of this module by changing the `ref` querystring parameter of the github URL to a desired value (e.g. `main`,`develop`).
+
+In case you omit the parameter terraform will soure the default branch (`main` in this case).
+
 ## Prerequesites
 
 - Setup your aws CLI and username either as environment vars or via `~/.aws/credentials`
