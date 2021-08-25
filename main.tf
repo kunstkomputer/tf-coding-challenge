@@ -10,16 +10,16 @@ terraform {
 }
 
 provider "aws" {
-  region  = "eu-central-1"
+  region = "eu-central-1"
 }
 variable "create_resources" {
-  type = bool
+  type    = bool
   default = true
 }
 
 # roles
 resource "aws_iam_role" "lambda_execution" {
-  name = "iam_for_kunstkomputer_lambda"
+  name  = "iam_for_kunstkomputer_lambda"
   count = var.create_resources ? 1 : 0
 
   assume_role_policy = <<EOF
@@ -56,7 +56,7 @@ data "aws_iam_policy_document" "lambda_execution_role_policy" {
 resource "aws_iam_role_policy" "lambda_execution_role" {
   role   = aws_iam_role.lambda_execution[count.index].id
   policy = data.aws_iam_policy_document.lambda_execution_role_policy.json
-  count = var.create_resources ? 1 : 0
+  count  = var.create_resources ? 1 : 0
 }
 
 # function
@@ -69,21 +69,21 @@ resource "aws_lambda_function" "kunstkomputer_lambda" {
   source_code_hash = filebase64sha256("deployment_package.zip")
 
   runtime = "python3.9"
-  count = var.create_resources ? 1 : 0
+  count   = var.create_resources ? 1 : 0
 
-  }
+}
 
 # cron trigger
 resource "aws_cloudwatch_event_rule" "cron_trigger" {
   name                = "cron_trigger_for_kunstkomputer_lambda"
   description         = "Fires every minute"
   schedule_expression = "cron(* * * * ? *)"
-  count = var.create_resources ? 1 : 0
+  count               = var.create_resources ? 1 : 0
 }
 
 resource "aws_cloudwatch_event_target" "trigger_kunstkomputer_lambda" {
-  rule      = aws_cloudwatch_event_rule.cron_trigger[count.index].name
-  arn       = aws_lambda_function.kunstkomputer_lambda[count.index].arn
+  rule  = aws_cloudwatch_event_rule.cron_trigger[count.index].name
+  arn   = aws_lambda_function.kunstkomputer_lambda[count.index].arn
   count = var.create_resources ? 1 : 0
 }
 
@@ -93,7 +93,7 @@ resource "aws_lambda_permission" "trigger_execution_permission" {
   function_name = aws_lambda_function.kunstkomputer_lambda[count.index].function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.cron_trigger[count.index].arn
-  count = var.create_resources ? 1 : 0
+  count         = var.create_resources ? 1 : 0
 }
 
 output "deployed_region" {
