@@ -7,8 +7,15 @@ Sample terraform config providing a lambda function, which is triggered via a cr
 The configuration files can be sourced without creating resources by setting the `create_resources` var to `False`
 This can be done on module level via a .tfvars or on cli level e.g.:
 ```
-❯ terraform apply -var create_resources=fals
+❯ terraform apply -var create_resources=false
 ```
+The lambda source code is deployed via a zip file of the code. To package the code use:
+
+```
+❯ zip -r deployment_package.zip function_code/*.py
+```
+The zipfile creation and uploading of code to an S3 Bucket is something that may be automated using a CI pipeline
+like github actions. For brevity of this challenge, a zipfile is included in the repo.
 
 ## Prerequesites
 
