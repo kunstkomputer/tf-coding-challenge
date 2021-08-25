@@ -33,7 +33,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
-resource "aws_lambda_function" "test_lambda" {
+resource "aws_lambda_function" "kunstkomputer_lambda" {
   filename      = "deployment_package.zip"
   function_name = "python_hello_world"
   role          = aws_iam_role.iam_for_lambda.arn
@@ -44,3 +44,8 @@ resource "aws_lambda_function" "test_lambda" {
   runtime = "python3.9"
 
   }
+
+
+output "function_name" {
+  value = aws_lambda_function.kunstkomputer_lambda.function_name
+}
