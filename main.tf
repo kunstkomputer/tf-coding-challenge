@@ -34,6 +34,7 @@ resource "aws_iam_role" "lambda_execution" {
 EOF
 }
 
+# lambda auto-creates loggroup not managed by tf
 data "aws_iam_policy_document" "lambda_execution_role_policy" {
   statement {
     actions = [

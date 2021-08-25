@@ -21,3 +21,9 @@ Sample terraform config providing a lambda function, which is triggered via a cr
   - `lambda:CreateAlias`
   - `lambda:GetFunctionConfiguration`
   - `lambda:AddPermissio`
+
+
+## Caveates
+
+If this configuration is applied, the lambda automatically creates a loggroup in CloudWatch for this function.
+The loggroup is not managed by Terraform, thus the it won't be removed in case this plan is destroyed.
