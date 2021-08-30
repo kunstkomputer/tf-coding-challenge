@@ -49,7 +49,7 @@ resource "aws_iam_role_policy" "lambda_execution_role" {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/function_code"
+  source_dir  = "${path.module}/src"
   output_path = "${path.module}/deployment_package.zip"
 }
 
