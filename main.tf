@@ -1,20 +1,8 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.55.0"
-    }
-  }
 
-  required_version = ">= 0.14.9"
-}
-
-provider "aws" {
-  region = "eu-central-1"
-}
 variable "create_resources" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
+  description = "if true, this config will create the desired resources in this file. Set to false for dry-sourcing the module"
 }
 
 # roles
@@ -59,14 +47,20 @@ resource "aws_iam_role_policy" "lambda_execution_role" {
   count  = var.create_resources ? 1 : 0
 }
 
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/function_code"
+  output_path = "${path.module}/deployment_package.zip"
+}
+
 # function
 resource "aws_lambda_function" "kunstkomputer_lambda" {
-  filename      = "deployment_package.zip"
-  function_name = "python_hello_world"
-  role          = aws_iam_role.lambda_execution[count.index].arn
-  handler       = "function_code.main.lambda_handler"
-  layers        = []
-  source_code_hash = filebase64sha256("deployment_package.zip")
+  filename         = "${path.module}/deployment_package.zip"
+  function_name    = "python_hello_world"
+  role             = aws_iam_role.lambda_execution[count.index].arn
+  handler          = "main.lambda_handler"
+  layers           = []
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
   runtime = "python3.9"
   count   = var.create_resources ? 1 : 0
